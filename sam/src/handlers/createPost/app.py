@@ -1,9 +1,10 @@
+# import requests
+
 import json
 import uuid
 import boto3
 import os
 
-# import requests
 
 
 def lambda_handler(event, context):
@@ -43,7 +44,7 @@ def lambda_handler(event, context):
                     'id': str(uuid.uuid4()),
                     'user': body['user'],
                     'title': body['title'],
-                    'body': body['body']
+                    'body': body['body'],
                     }
                 )
 
