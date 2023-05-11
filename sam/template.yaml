@@ -19,6 +19,25 @@ Resources:
     Properties:
       StageName: v1
 
+  createPostFunction:
+  Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  Properties:
+    CodeUri: scr/handlers/
+    Handler: app.lambda_handler
+    Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+    Runtime: python3.9
+    Architectures:
+      - x86_64
+    Events:
+      Task:
+        Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        Properties:
+          Path: /createPost
+          Method: post
+    Environment:
+      Variables:
+        POSTS_TABLE: !Ref DynamoDBTable
+
   GetSignedUrlPutFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -72,6 +91,7 @@ Resources:
         - AttributeName: "id"
           KeyType: "RANGE"
       BillingMode: PAY_PER_REQUEST
+
 
 Outputs:
   PostsApi:
