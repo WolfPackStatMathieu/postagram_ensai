@@ -33,16 +33,17 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.getenv("POSTS_TABLE"))
     
-    body = json.loads(event['body'])
+    body = json.loads(event["body"])
+
+
     # get username
     user = event["headers"]["Authorization"]
-
     
     # object to be inserted
     data = table.put_item(
             Item = { 
                     'id': str(uuid.uuid4()),
-                    'user': body['user'],
+                    'user': user,
                     'title': body['title'],
                     'body': body['body'],
                     }
