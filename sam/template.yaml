@@ -37,6 +37,44 @@ Resources:
       Environment:
         Variables:
           POSTS_TABLE: !Ref PostsTable
+          
+  S3DetectLabelFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/detectLabels
+      Runtime: python3.9
+      Handler: app.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Events:
+        ObjectCreatedEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref UploadsBucket
+            Events: 
+              - s3:ObjectCreated:*
+      Environment:
+        Variables:
+          POSTS_TABLE: !Ref PostsTable
+
+  getPostsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/handlers/getPosts
+      Handler: app.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        Task:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /getPost
+            Method: GET
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref UploadsBucket
+          POSTS_TABLE: !Ref PostsTable
 
   GetSignedUrlPutFunction:
     Type: AWS::Serverless::Function
