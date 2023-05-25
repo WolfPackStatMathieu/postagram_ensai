@@ -32,8 +32,9 @@ Resources:
         Task:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /createPost
-            Method: post
+            RestApiId: !Ref PostsApi
+            Path: /posts
+            Method: POST
       Environment:
         Variables:
           POSTS_TABLE: !Ref PostsTable

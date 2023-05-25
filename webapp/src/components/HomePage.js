@@ -17,7 +17,7 @@ function HomePage({name}) {
   }
 
   const fetchUserPosts = async () => {
-    axios.get("/posts",
+    axios.get("/getPost",
      { headers: { Authorization: getToken()} ,
       params: { user: name } })
       .then(res => {
