@@ -30,7 +30,7 @@ function HomePage({name}) {
   }
 
   const fetchAllPosts = async () => {
-    axios.get("/posts", { headers: { Authorization: getToken()} })
+    axios.get("/getPost", { headers: { Authorization: getToken()} })
       .then(res => {
         console.log(res.data)
         setPosts(res.data)
