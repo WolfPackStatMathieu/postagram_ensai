@@ -70,12 +70,33 @@ Resources:
         Task:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
+            RestApiId: !Ref PostsApi
             Path: /getPost
             Method: GET
       Environment:
         Variables:
           S3_BUCKET: !Ref UploadsBucket
           POSTS_TABLE: !Ref PostsTable
+
+  DeletePostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/deletePost
+      Runtime: python3.9
+      Handler: app.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          POSTS_TABLE: !Ref PostsTable
+      Events:
+        DeletePostFunctionApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PostsApi
+            Path: /posts/{id}  # Nouveau chemin avec un paramètre (id)
+            Method: DELETE  # Méthode de suppression
 
   GetSignedUrlPutFunction:
     Type: AWS::Serverless::Function
